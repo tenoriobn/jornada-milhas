@@ -11,7 +11,7 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("fetch", (event) => {
   console.log(`Baixando ${event.request.url}`);
-  event.respondWith(cachePrimeiro(event.request));
+  event.respondWith(redePrimeiro(event.request));
 });
 
 const cachePrimeiro = async (request) => {
@@ -25,6 +25,18 @@ const cachePrimeiro = async (request) => {
   atualizaCache(request, respostaRede.clone());
 
   return respostaRede;
+};
+
+const redePrimeiro = async (request) => {
+  const respostaDaRede = await fetch(request);
+
+  if (respostaDaRede) {
+    atualizaCache(request, respostaDaRede.clone());
+    return respostaDaRede;
+  }
+
+  const respostaDoCache = await caches.match(request);
+  return respostaDoCache;
 };
 
 const atualizaCache = async (request, response) => {
