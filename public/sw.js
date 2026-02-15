@@ -11,7 +11,19 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("fetch", (event) => {
   console.log(`Baixando ${event.request.url}`);
-  event.respondWith(redePrimeiro(event.request));
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((respostaCache) => {
+        const respostaObtida = fetch(event.request).then((respostaDaRede) => {
+          cache.put(event.request, respostaDaRede.clone());
+
+          return respostaDaRede;
+        });
+
+        return respostaCache || respostaObtida;
+      });
+    }),
+  );
 });
 
 const cachePrimeiro = async (request) => {
