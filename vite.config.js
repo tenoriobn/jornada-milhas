@@ -4,6 +4,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 const vitePWA = VitePWA({
   registerType: "autoUpdate",
+  strategies: "injectManifest",
   manifest: {
     id: "/",
     name: "Jornada Milhas",
@@ -59,5 +60,5 @@ const vitePWA = VitePWA({
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), vitePWA],
 });
